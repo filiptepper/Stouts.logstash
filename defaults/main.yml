@@ -12,7 +12,6 @@ logstash_apt_common_pkgs:
 
 logstash_server_enabled: yes                # Setup logstash server
 logstash_forwarder_enabled: no              # Setup logstash forwarder
-logstash_web_enabled: no                    # Setup logstash web
 
 logstash_user: logstash                     # logstash user
 logstash_group: "{{logstash_user}}"         # logstash group

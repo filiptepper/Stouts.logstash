@@ -1,8 +1,5 @@
 ---
 
-- name: logstash-install | Add keys
-  apt_key: url=http://packages.elasticsearch.org/GPG-KEY-elasticsearch id=D88E42B4
-
 - name: logstash-install | Add repositories
   apt_repository: repo='{{item}}' update_cache=yes
   with_items: logstash_apt_repositories
@@ -21,8 +18,6 @@
   - logstash
   when: logstash_enabled
 
-- name: logstash-install | Install logstash forwarder
-  apt: pkg={{item}}
-  with_items:
-  - logstash-forwarder
-  when: logstash_forwarder_enabled
+- name: logstash-install | Install logstash
+  apt: deb={{logstash_home}}/logstash.deb
+  when: logstash_downloaded.changed

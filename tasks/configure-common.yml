@@ -15,6 +15,7 @@
   changed_when: False
 
 - name: logstash-configure | list plugins
+  ignore_errors: true
   with_items: logstash_plugins
   shell: "/opt/logstash/bin/plugin list | grep {{ item }}"
   register: logstash_plugins_list

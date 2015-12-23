@@ -80,3 +80,5 @@ logstash_forwarder_files:
   - paths: [ /var/log/syslog ]
     fields:
       type: syslog
+
+logstash_plugins:

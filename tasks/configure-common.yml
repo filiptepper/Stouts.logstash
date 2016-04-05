@@ -5,9 +5,11 @@
 
 - name: logstash-configure | Copy SSL files pt.1
   copy: src={{logstash_ssl_cert_file}} dest={{logstash_confdir}}/logstash.crt owner={{logstash_user}} group={{logstash_group}} mode=0644
+  when: logstash_ssl_cert_file is not undefined and logstash_ssl_cert_file is not none and logstash_ssl_cert_file | trim != ''
 
 - name: logstash-configure | Copy SSL files pt.2
   copy: src={{logstash_ssl_key_file}} dest={{logstash_confdir}}/logstash.key owner={{logstash_user}} group={{logstash_group}} mode=0600
+  when: logstash_ssl_key_file is not undefined and logstash_ssl_key_file is not none and logstash_ssl_key_file | trim != ''
 
 - name: logstash-configure | Grant permissions to read
   command: setfacl -m u:{{logstash_user}}:r {{item}}

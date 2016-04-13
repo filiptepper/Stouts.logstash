@@ -21,7 +21,7 @@
 
 - name: logstash-configure | Setup patterns
   template: src=pattern.j2 dest={{logstash_confdir}}/patterns/{{item[0]}} owner={{logstash_user}} group={{logstash_group}}
-  with_items: logstash_config_patterns.items()
+  with_items: "{{logstash_config_patterns.items()}}"
   tags: [logstash, logstash-configure]
 
 - name: logstash-configure | Ensure the service is started

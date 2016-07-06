@@ -19,10 +19,10 @@
 - name: logstash-configure | list plugins
   ignore_errors: true
   with_items: logstash_plugins
-  shell: "/opt/logstash/bin/plugin list | grep {{ item }}"
+  shell: "/opt/logstash/bin/logstash-plugin list | grep {{ item }}"
   register: logstash_plugins_list
 
 - name: logstash-configure | install new plugins
   with_items: logstash_plugins_list['results']
   when: item['stdout'] == ''
-  command: "/opt/logstash/bin/plugin install {{ item['item'] }}"
+  command: "/opt/logstash/bin/logstash-plugin install {{ item['item'] }}"

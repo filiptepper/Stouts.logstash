@@ -1,11 +1,8 @@
 ---
 
-- name: logstash-install | Add keys
-  apt_key: url=http://packages.elasticsearch.org/GPG-KEY-elasticsearch id=D88E42B4
-
 - name: logstash-install | Add repositories
   apt_repository: repo='{{item}}' update_cache=yes
-  with_items: logstash_apt_repositories
+  with_items: "{{logstash_apt_repositories}}"
 
 - name: logstash-install | Accept Oracle license
   shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections; echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
@@ -13,7 +10,7 @@
 
 - name: logstash-install | Install commmon packages
   apt: pkg={{item}}
-  with_items: logstash_apt_common_pkgs
+  with_items: "{{logstash_apt_common_pkgs}}"
 
 - name: logstash-install | Install logstash
   apt: pkg={{item}}
@@ -21,8 +18,15 @@
   - logstash
   when: logstash_enabled
 
-- name: logstash-install | Install logstash forwarder
-  apt: pkg={{item}}
-  with_items:
-  - logstash-forwarder
+- name: logstash-install | Install logstash
+  apt: deb={{logstash_home}}/logstash.deb
+  when: logstash_downloaded.changed
+
+- name: logstash-install | Download logstash forwarder
+  get_url: url={{logstash_forwarder_url}} dest={{logstash_home}}/logstash-forwarder.deb
+  register: logstash_forwarder_downloaded
   when: logstash_forwarder_enabled
+
+- name: logstash-install | Install logstash forwarder
+  apt: deb={{logstash_home}}/logstash-forwarder.deb
+  when: logstash_forwarder_downloaded.changed

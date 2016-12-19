@@ -1,7 +1,7 @@
 ---
 
 - name: logstash-configure | Setup config directory
-  file: state=directory path={{logstash_confdir}} owner={{logstash_user}} group={{logstash_group}}
+  file: state=directory path={{logstash_confdir}}/conf.d owner={{logstash_user}} group={{logstash_group}}
 
 - name: logstash-configure | Copy SSL files pt.1
   copy: src={{logstash_ssl_cert_file}} dest={{logstash_confdir}}/logstash.crt owner={{logstash_user}} group={{logstash_group}} mode=0644
@@ -13,16 +13,15 @@
 
 - name: logstash-configure | Grant permissions to read
   command: setfacl -m u:{{logstash_user}}:r {{item}}
-  with_items: logstash_grant_permissions
+  with_items: "{{logstash_grant_permissions}}"
   changed_when: False
 
 - name: logstash-configure | list plugins
-  ignore_errors: true
-  with_items: logstash_plugins
-  shell: "/opt/logstash/bin/logstash-plugin list | grep {{ item }}"
+  with_items: "{{logstash_plugins}}"
+  shell: "/opt/logstash/bin/plugin list | grep {{ item }}"
   register: logstash_plugins_list
 
 - name: logstash-configure | install new plugins
-  with_items: logstash_plugins_list['results']
+  with_items: "{{logstash_plugins_list['results']}}"
   when: item['stdout'] == ''
   command: "/opt/logstash/bin/logstash-plugin install {{ item['item'] }}"

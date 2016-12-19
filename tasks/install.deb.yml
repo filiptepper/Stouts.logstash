@@ -18,10 +18,6 @@
   - logstash
   when: logstash_enabled
 
-- name: logstash-install | Install logstash
-  apt: deb={{logstash_home}}/logstash.deb
-  when: logstash_downloaded.changed
-
 - name: logstash-install | Download logstash forwarder
   get_url: url={{logstash_forwarder_url}} dest={{logstash_home}}/logstash-forwarder.deb
   register: logstash_forwarder_downloaded

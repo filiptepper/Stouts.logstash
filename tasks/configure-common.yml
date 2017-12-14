@@ -15,13 +15,3 @@
   command: setfacl -m u:{{logstash_user}}:r {{item}}
   with_items: "{{logstash_grant_permissions}}"
   changed_when: False
-
-- name: logstash-configure | list plugins
-  with_items: "{{logstash_plugins}}"
-  shell: "/opt/logstash/bin/plugin list | grep {{ item }}"
-  register: logstash_plugins_list
-
-- name: logstash-configure | install new plugins
-  with_items: "{{logstash_plugins_list['results']}}"
-  when: item['stdout'] == ''
-  command: "/opt/logstash/bin/logstash-plugin install {{ item['item'] }}"
